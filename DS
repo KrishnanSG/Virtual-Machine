@@ -1,0 +1,19 @@
+create and delete folders
+create and delete files
+search files
+ls function
+
+
+1.mkdir <foldername>
+2.rmdir <foldername>
+3.nano  <filename>
+4.ls			tree traversal level order just one level
+5.search <filename>	read file prints address
+6.cd     <foldername>	move level above
+7.cd ..
+8.rename <foldername>
+
+---------------
+History
+
+
