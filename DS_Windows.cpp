@@ -4,8 +4,9 @@
     *   ls
     *   clear
     *   cd , cd ..
+    *   Memory
 
-    Now working on file handling
+    Now working on nano
 */
 #include <iostream>
 #include <string.h>
