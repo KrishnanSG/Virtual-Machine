@@ -65,9 +65,19 @@ int main()
     int len = strlen(current_dir);
     char command[50];
     int i = 0;
+    // We can use stack to print the name
     do
     {
-        cout << endl << cur->directory_name << ":~$ ";
+        cout << endl ;
+        Node *trav;
+        trav=cur;
+        do
+        {
+            cout<<cur->directory_name<<"/";
+            cur = cur->parent;
+        }while(cur!=NULL);
+        cur=trav;
+        cout<< ":~$ ";
         cin >> command;
         if (strcmp(command, "mkdir") == 0)
         {
@@ -106,16 +116,21 @@ int main()
             }
             else
             {
-                int cd_at=0;
+                int cd_at=-1;
                 for(int s=0;s<5;s++)
                 {
-                    if(strcmp(cur->links[s]->directory_name,name)==0)
+                    if(cur->links[s]!=NULL && strcmp(cur->links[s]->directory_name,name)==0)
                     {
                         cd_at=s;
                         break;
                     }
                 }
-                cur = cur->links[cd_at];
+                if(cd_at!=-1)
+                    cur = cur->links[cd_at];
+                else
+                {
+                    cout<<endl<<name<<" not found";
+                }
                 /*strcpy(prev_dir,cur->directory_name);
                 strcat(current_dir, "/");
                 strcat(current_dir, name);*/
