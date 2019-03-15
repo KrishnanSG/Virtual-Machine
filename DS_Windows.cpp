@@ -1,11 +1,24 @@
+/*
+    Finished
+    *   mkdir
+    *   ls
+    *   clear
+    *   cd , cd ..
+
+    Now working on file handling
+*/
 #include <iostream>
 #include <string.h>
+#include <stdio.h>
 #include <stdlib.h> // for clear screen
 using namespace std;
+
+const char path[]={"C:\\Users\\ganesh\\Desktop\\Virtual Machine\\Database.txt"};
 
 struct Node
 {
     char directory_name[10];
+    char address[10];
     Node *links[5];
     Node *parent;
 };
@@ -18,12 +31,40 @@ void create_home()
     {
         home->links[i] = NULL;
     }
+    strcpy(home->address,"");
     home->parent = NULL;
+}
+void memory()
+{
+    FILE *fp;
+    fp = fopen(path,"a+");
+    char addr[10],name[10];
+
+    while(fscanf(fp,"%s %s",&addr,&name)!=EOF)
+    {
+        int i,j=0;
+        i=strlen(addr);
+        Node *trav = home;
+        Node *temp = new Node;
+        strcpy(temp->directory_name,name);
+        for (int k = 0; k < 5; k++)
+        {
+            temp->links[k] = NULL;
+        }
+        for(j=0;j<i-1;j++)
+        {
+            trav = trav->links[int(addr[j])-48];
+        }
+        temp->parent=trav;
+        trav->links[int(addr[j])-48]=temp;
+    }
+    fclose(fp);
 }
 Node *create(char name[10], Node *root)
 {
     Node *dir = new Node;
     strcpy(dir->directory_name, name);
+    strcpy(dir->address,root->address);
     for (int i = 0; i < 5; i++)
     {
         dir->links[i] = NULL;
@@ -40,27 +81,30 @@ void traverse(Node *root)
             traverse(root->links[i]);
     }
 }
-/*
-Node *create_dir(Node *cur,int val)
+
+void mkdir(char name[10], int addr)
 {
-    return cur->links[val];
-}*/
-void mkdir(char name[10], int address)
-{
-    cur->links[address] = create(name, cur);
+    char temp[2];
+    temp[0]=char(addr+48);
+    temp[1]='\0';
+    cur->links[addr] = create(name, cur);
+    strcat(cur->links[addr]->address,temp);
+    FILE *fp;
+    fp = fopen(path,"a");
+    fprintf(fp,"%s %s\n",&cur->links[addr]->address,&cur->links[addr]->directory_name);
+    fclose(fp);
 }
 int main()
 {
     create_home();
     cur = home;
+    memory();
     char current_dir[100] = {""};
-    char prev_dir[100] = {""};
     int len = strlen(current_dir);
     char command[50];
     int i = 0;
     do
     {
-        cout << endl ;
         Node *trav;
         trav=cur;
         strcpy(current_dir,"");
@@ -75,6 +119,7 @@ int main()
         cur=trav;
         cout<< strrev(current_dir) << "\b > ";
         cin >> command;
+
         if (strcmp(command, "mkdir") == 0)
         {
             char name[10];
@@ -82,22 +127,31 @@ int main()
             int free_slot=-1;
             for(int l=0;l<5;l++)
             {
+                if(cur->links[l]!=NULL&&strcmp(cur->links[l]->directory_name,name)==0)
+                {
+                    cout<< "Directory named \'"<<name<<"\' aldready exists. Did you mean cd \'"<<name<<"\' ?"<<endl;
+                    free_slot=-2;
+                    break;
+                }
                 if(cur->links[l]==NULL)
                 {
                     free_slot=l;
                     break;
                 }
             }
-            if(free_slot!=-1)
+            if(free_slot>=0)
             {
                 mkdir(name, free_slot);
             }
+            else if(free_slot==-1)
+            {
+                cout<< "Directory \'"<<cur->directory_name<<"\' is full\n";
+            }
             i++;
-            //traverse(home);
         }
         else if (strcmp(command, "rmdir") == 0)
         {
-            cout << "\nDeleted";
+            cout << "\nDeleted\n";
         }
         else if (strcmp(command, "cd") == 0)
         {
@@ -125,7 +179,7 @@ int main()
                     cur = cur->links[cd_at];
                 else
                 {
-                    cout<<endl<<"\'"<<name<<"\' not found";
+                    cout<<"\'"<<name<<"\' not found\n";
                 }
             }
         }
