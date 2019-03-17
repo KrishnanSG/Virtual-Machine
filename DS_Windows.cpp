@@ -5,13 +5,21 @@
     *   clear
     *   cd , cd ..
     *   Memory
+    *   nano
 
-    Now working on nano
+    To Do
+    *   rmdir
+    *   search
+    *   cpf and cpd (cpf- copy file & cpd copy directory)
+    *   mvf and mvd (           ""                      )
+    *   rename
+    
 */
 #include <iostream>
+#include <conio.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h> // for clear screen
+#include <stdlib.h> // system()
 using namespace std;
 
 const char path[]={"C:\\Users\\ganesh\\Desktop\\Virtual Machine\\Database.txt"};
@@ -48,6 +56,7 @@ void memory()
         Node *trav = home;
         Node *temp = new Node;
         strcpy(temp->directory_name,name);
+        strcpy(temp->address,addr);
         for (int k = 0; k < 5; k++)
         {
             temp->links[k] = NULL;
@@ -92,6 +101,7 @@ void mkdir(char name[10], int addr)
     strcat(cur->links[addr]->address,temp);
     FILE *fp;
     fp = fopen(path,"a");
+    cout<< "cur-addr:"<<cur->links[addr]->address<<endl;
     fprintf(fp,"%s %s\n",&cur->links[addr]->address,&cur->links[addr]->directory_name);
     fclose(fp);
 }
@@ -193,6 +203,15 @@ int main()
                     cout<<cur->links[l]->directory_name<<endl;
                 }
             }
+        }
+        else if (strcmp(command, "nano") == 0)
+        {
+            system("cls");
+            char filename[20],fname[20];
+            strcpy(fname,"notepad ");
+            cout<<"Enter filename:";
+            cin>>filename;
+            system(strcat(fname,filename));
         }
         else if (strcmp(command, "clear") == 0)
         {
