@@ -13,7 +13,7 @@
     *   cpf and cpd (cpf- copy file & cpd copy directory)
     *   mvf and mvd (           ""                      )
     *   rename
-    
+
 */
 #include <iostream>
 #include <conio.h>
@@ -22,7 +22,7 @@
 #include <stdlib.h> // system()
 using namespace std;
 
-const char path[]={"C:\\Users\\ganesh\\Desktop\\Virtual Machine\\Database.txt"};
+const char path[]={"Z:\\Virtual_Machine\\Database.txt"};
 
 struct Node
 {
@@ -101,7 +101,6 @@ void mkdir(char name[10], int addr)
     strcat(cur->links[addr]->address,temp);
     FILE *fp;
     fp = fopen(path,"a");
-    cout<< "cur-addr:"<<cur->links[addr]->address<<endl;
     fprintf(fp,"%s %s\n",&cur->links[addr]->address,&cur->links[addr]->directory_name);
     fclose(fp);
 }
@@ -110,6 +109,8 @@ int main()
     create_home();
     cur = home;
     memory();
+    system("mkdir Virtual_Machine");
+    system("cls");
     char current_dir[100] = {""};
     int len = strlen(current_dir);
     char command[50];
@@ -212,6 +213,23 @@ int main()
             cout<<"Enter filename:";
             cin>>filename;
             system(strcat(fname,filename));
+            char move[50],rename[50];
+            strcpy(move,"move ");
+            strcpy(rename,"rename ");
+            strcat(rename,filename);
+            strcat(rename," ");
+            strcat(rename,cur->address);
+            strcat(rename,"_");
+            strcat(rename,filename);
+            cout<<rename;
+            system(rename);
+
+            strcat(move,cur->address);
+            strcat(move,"_");
+            strcat(move,filename);
+            strcat(move," Virtual_Machine\\");
+            cout<<"\n"<<move;
+            system(move);
         }
         else if (strcmp(command, "clear") == 0)
         {
