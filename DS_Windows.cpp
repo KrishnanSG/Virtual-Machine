@@ -6,8 +6,10 @@
     *   cd , cd ..
     *   Memory
     *   nano
+    *   ls to display files in it
 
     To Do
+
     *   rmdir
     *   search
     *   cpf and cpd (cpf- copy file & cpd copy directory)
@@ -92,6 +94,32 @@ void traverse(Node *root)
     }
 }
 
+void find_and_print(char str[20])
+{
+    int f=0,k=0;
+    char addr[10],name[10];
+    for(int i=0;i<strlen(str);i++)
+    {
+        if(str[i]=='_')
+        {
+            f=1;
+            i++;
+        }
+        if(f==0)
+        {
+            addr[i]=str[i];
+            addr[i+1]='\0';
+        }
+        else if(f==1)
+        {
+            name[k]=str[i];
+            k++;
+            name[k]='\0';
+        }
+    }
+    if(strcmp(addr,cur->address)==0)
+        cout<<name<<endl;
+}
 void mkdir(char name[10], int addr)
 {
     char temp[2];
@@ -197,6 +225,8 @@ int main()
         }
         else if (strcmp(command, "ls") == 0)
         {
+            cout<<"Directories\n";
+            cout<<"--------------\n";
             for(int l=0;l<5;l++)
             {
                 if(cur->links[l]->directory_name!=NULL)
@@ -204,6 +234,17 @@ int main()
                     cout<<cur->links[l]->directory_name<<endl;
                 }
             }
+            cout<<"\nFiles\n";
+            cout<<"--------------\n";
+            FILE *fp;
+            fp = fopen("Virtual_Machine\\Files.txt","a+");
+            char user_filename[20];
+            while(fscanf(fp,"%s",&user_filename)!=EOF)
+            {
+                find_and_print(user_filename);
+            }
+            fclose(fp);
+            cout<<endl;
         }
         else if (strcmp(command, "nano") == 0)
         {
@@ -230,6 +271,9 @@ int main()
             strcat(move," Virtual_Machine\\");
             cout<<"\n"<<move;
             system(move);
+            system("cls");
+            
+            
         }
         else if (strcmp(command, "clear") == 0)
         {
