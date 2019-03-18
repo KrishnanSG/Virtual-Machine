@@ -5,16 +5,26 @@
     *   clear
     *   cd , cd ..
     *   Memory
+    *   nano
+    *   ls to display files in it
 
-    Now working on nano
+    To Do
+
+    *   rmdir
+    *   search
+    *   cpf and cpd (cpf- copy file & cpd copy directory)
+    *   mvf and mvd (           ""                      )
+    *   rename
+
 */
 #include <iostream>
+#include <conio.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h> // for clear screen
+#include <stdlib.h> // system()
 using namespace std;
 
-const char path[]={"C:\\Users\\ganesh\\Desktop\\Virtual Machine\\Database.txt"};
+const char path[]={"Z:\\Virtual_Machine\\Database.txt"};
 
 struct Node
 {
@@ -48,6 +58,7 @@ void memory()
         Node *trav = home;
         Node *temp = new Node;
         strcpy(temp->directory_name,name);
+        strcpy(temp->address,addr);
         for (int k = 0; k < 5; k++)
         {
             temp->links[k] = NULL;
@@ -83,6 +94,32 @@ void traverse(Node *root)
     }
 }
 
+void find_and_print(char str[20])
+{
+    int f=0,k=0;
+    char addr[10],name[10];
+    for(int i=0;i<strlen(str);i++)
+    {
+        if(str[i]=='_')
+        {
+            f=1;
+            i++;
+        }
+        if(f==0)
+        {
+            addr[i]=str[i];
+            addr[i+1]='\0';
+        }
+        else if(f==1)
+        {
+            name[k]=str[i];
+            k++;
+            name[k]='\0';
+        }
+    }
+    if(strcmp(addr,cur->address)==0)
+        cout<<name<<endl;
+}
 void mkdir(char name[10], int addr)
 {
     char temp[2];
@@ -100,6 +137,8 @@ int main()
     create_home();
     cur = home;
     memory();
+    system("mkdir Virtual_Machine");
+    system("cls");
     char current_dir[100] = {""};
     int len = strlen(current_dir);
     char command[50];
@@ -186,6 +225,8 @@ int main()
         }
         else if (strcmp(command, "ls") == 0)
         {
+            cout<<"Directories\n";
+            cout<<"--------------\n";
             for(int l=0;l<5;l++)
             {
                 if(cur->links[l]->directory_name!=NULL)
@@ -193,6 +234,46 @@ int main()
                     cout<<cur->links[l]->directory_name<<endl;
                 }
             }
+            cout<<"\nFiles\n";
+            cout<<"--------------\n";
+            FILE *fp;
+            fp = fopen("Virtual_Machine\\Files.txt","a+");
+            char user_filename[20];
+            while(fscanf(fp,"%s",&user_filename)!=EOF)
+            {
+                find_and_print(user_filename);
+            }
+            fclose(fp);
+            cout<<endl;
+        }
+        else if (strcmp(command, "nano") == 0)
+        {
+            system("cls");
+            char filename[20],fname[20];
+            strcpy(fname,"notepad ");
+            cout<<"Enter filename:";
+            cin>>filename;
+            system(strcat(fname,filename));
+            char move[50],rename[50];
+            strcpy(move,"move ");
+            strcpy(rename,"rename ");
+            strcat(rename,filename);
+            strcat(rename," ");
+            strcat(rename,cur->address);
+            strcat(rename,"_");
+            strcat(rename,filename);
+            cout<<rename;
+            system(rename);
+
+            strcat(move,cur->address);
+            strcat(move,"_");
+            strcat(move,filename);
+            strcat(move," Virtual_Machine\\");
+            cout<<"\n"<<move;
+            system(move);
+            system("cls");
+            
+            
         }
         else if (strcmp(command, "clear") == 0)
         {
