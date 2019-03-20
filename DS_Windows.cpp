@@ -24,7 +24,7 @@
 #include <stdlib.h> // system()
 using namespace std;
 
-const char path[]={"Z:\\Virtual_Machine\\Database.txt"};
+char path[100];
 
 struct Node
 {
@@ -132,8 +132,18 @@ void mkdir(char name[10], int addr)
     fprintf(fp,"%s %s\n",&cur->links[addr]->address,&cur->links[addr]->directory_name);
     fclose(fp);
 }
+
+void find_current_user_dir()
+{
+    system("cd > w_dir.txt");
+    FILE *fp;
+    fp = fopen("w_dir.txt","r");
+    fscanf(fp,"%s",&path);
+    strcat(path,"\\Virtual_Machine\\Database.txt");
+}
 int main()
 {
+    find_current_user_dir();
     create_home();
     cur = home;
     memory();
@@ -249,31 +259,34 @@ int main()
         else if (strcmp(command, "nano") == 0)
         {
             system("cls");
-            char filename[20],fname[20];
-            strcpy(fname,"notepad ");
+            char filename[20],fname[20],notepad[50];
             cout<<"Enter filename:";
             cin>>filename;
-            system(strcat(fname,filename));
-            char move[50],rename[50];
-            strcpy(move,"move ");
-            strcpy(rename,"rename ");
-            strcat(rename,filename);
-            strcat(rename," ");
-            strcat(rename,cur->address);
-            strcat(rename,"_");
-            strcat(rename,filename);
-            cout<<rename;
-            system(rename);
-
-            strcat(move,cur->address);
-            strcat(move,"_");
-            strcat(move,filename);
-            strcat(move," Virtual_Machine\\");
-            cout<<"\n"<<move;
-            system(move);
+            strcpy(notepad,"notepad Virtual_Machine\\");
+            strcpy(fname,"");
+            strcat(fname, cur->address);
+            strcat(fname,"_");
+            strcat(fname,filename);
+            FILE *fp;
+            fp = fopen("Virtual_Machine\\Files.txt","a+");
+            char user_filename[20];
+            int file_exists=0;
+            while(fscanf(fp,"%s",&user_filename)!=EOF)
+            {
+                if(strcmp(user_filename,fname)==0)
+                {
+                    file_exists=1;
+                    system(strcat(notepad,fname));
+                    break;
+                }
+            }
+            if(file_exists==0)
+            {
+                fprintf(fp,"%s\n",&fname);
+                system(strcat(notepad,fname));
+            }
+            fclose(fp);
             system("cls");
-            
-            
         }
         else if (strcmp(command, "clear") == 0)
         {
