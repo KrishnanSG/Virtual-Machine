@@ -1,4 +1,12 @@
 /*
+
+    Use system(del Virtual_Machine\\fullfilename")
+     eg: system("del Virtual_Machine\\0_inkrish.txt");
+    Finish this and call
+
+*/
+
+/*
     Finished
     *   mkdir
     *   ls
@@ -96,7 +104,8 @@ void traverse(Node *root)
 void find_and_print(char str[20])
 {
     int f=0,k=0;
-    char addr[10],name[10];
+    char addr[10],name[20];
+    strcpy(addr,"");
     for(int i=0;i<strlen(str);i++)
     {
         if(str[i]=='_')
@@ -116,6 +125,7 @@ void find_and_print(char str[20])
             name[k]='\0';
         }
     }
+    //cout<<"addr:"<<addr<<" cur->addr:"<<cur->address<<" name:"<<name<<endl;
     if(strcmp(addr,cur->address)==0)
         cout<<name<<endl;
 }
