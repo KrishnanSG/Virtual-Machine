@@ -1,6 +1,6 @@
 /*
 
-    Use system(del Virtual_Machine\\fullfilename")
+    Use system("del Virtual_Machine\\fullfilename")
      eg: system("del Virtual_Machine\\0_inkrish.txt");
     Finish this and call
 
