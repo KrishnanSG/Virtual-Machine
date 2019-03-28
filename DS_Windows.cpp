@@ -7,19 +7,18 @@
     *   Memory
     *   nano
     *   ls to display files in it
-
+    *   tree
     To Do
-
     *   rmdir
     *   search
     *   cpf and cpd (cpf- copy file & cpd copy directory)
     *   mvf and mvd (           ""                      )
     *   rename
-
 */
 #include <iostream>
 #include <conio.h>
 #include <string.h>
+#include<string>
 #include <stdio.h>
 #include <stdlib.h> // system()
 using namespace std;
@@ -141,6 +140,109 @@ void find_current_user_dir()
     fscanf(fp,"%s",&path);
     strcat(path,"\\Virtual_Machine\\Database.txt");
 }
+
+void spacing(Node *root,int a)
+{
+    if(a)
+    {
+      //  cout<<endl;
+        //cout<<char(192);
+        for(int i=0;i<a-1;i++)
+        {
+            cout<<char(179)<<"   ";
+        }
+        Node *temp = root->parent;
+        for(int m=0;m<5;m++)
+        {
+            if(temp->links[m]==root&&m!=4)
+            {
+                if(temp->links[m+1]!=NULL)
+                {
+                    cout<<char(195)<<char(196)<<char(196)<<char(196);
+                    break;
+                }
+                else
+                {
+                    cout<<char(192)<<char(196)<<char(196)<<char(196);
+                    break;
+                }
+            }
+            else if(m==4)
+            {
+                cout<<char(192)<<char(196)<<char(196)<<char(196);
+                break;
+            }
+        }
+    }
+}
+void print_tree(Node *root)
+{
+    if(root!=NULL)
+    {
+        if(root!=cur)
+            spacing(root,strlen(root->address)-strlen(cur->address));
+        cout<<root->directory_name<<"\n";
+        print_tree(root->links[0]);
+        print_tree(root->links[1]);
+        print_tree(root->links[2]);
+        print_tree(root->links[3]);
+        print_tree(root->links[4]);
+    }
+}
+void delete_tree(Node *root)
+{
+    if(root!=NULL)
+    {
+        delete_tree(root->links[0]);
+        delete_tree(root->links[1]);
+        delete_tree(root->links[2]);
+        delete_tree(root->links[3]);
+        delete_tree(root->links[4]);
+        FILE *fp;
+        fp=fopen("Virtual_Machine\\Database.txt","a+");
+        FILE *fptr;
+        fptr=fopen("Temp.txt","w+");
+        char addr[20];
+        char dir[20];
+        cout<<root->directory_name<<endl;
+        while(fscanf(fp,"%s%s",addr,dir)!=EOF)
+        {
+            if(!strcmp(root->directory_name,dir)==0)
+                fprintf(fptr,"%s %s\n",addr,dir);
+            else
+            {
+                char filename[20];
+                string str;
+                str=addr;
+                FILE *filepoint;
+                filepoint=fopen("Virtual_Machine\\Files.txt","a+");
+                FILE *filepointer;
+                filepointer=fopen("Tempfile.txt","w+");
+                while(fscanf(filepoint,"%s",filename)!=EOF)
+                {
+                    char addrstr[strlen(addr)];
+                    for (int i=0;i<sizeof(addrstr);i++)
+                    {
+                        addrstr[i]=filename[i];
+                    }
+                    addrstr[str.length()]='\0';
+                    cout<<addrstr<<endl;
+                    if(!strcmp(addr,addrstr)==0)
+                        fprintf(filepointer,"%s\n",filename);
+                }
+                fclose(filepoint);
+                fclose(filepointer);
+                remove("Virtual_Machine\\Files.txt");
+                rename("Tempfile.txt","Virtual_Machine\\Files.txt");
+            }
+        }
+        fclose(fp);
+        fclose(fptr);
+        remove("Virtual_Machine\\Database.txt");
+        rename("Temp.txt","Virtual_Machine\\Database.txt");
+        delete(root);
+    }
+}
 int main()
 {
     find_current_user_dir();
@@ -201,7 +303,22 @@ int main()
         }
         else if (strcmp(command, "rmdir") == 0)
         {
-            cout << "\nDeleted\n";
+            char name[20];
+            cin>>name;
+            int flag=0;
+            for(int l=0;l<5;l++)
+            {
+                if(cur->links[l]!=NULL&&strcmp(cur->links[l]->directory_name,name)==0)
+                {
+                    flag=1;
+                    cout << "\nDeleted\n";
+                    delete_tree(cur->links[l]);
+                    cur->links[l]=NULL;
+                    break;
+                }
+            }
+            if(flag==0)
+                cout<<"Directory name not found in current directory "<<cur->directory_name<<endl;
         }
         else if (strcmp(command, "cd") == 0)
         {
@@ -232,6 +349,7 @@ int main()
                     cout<<"\'"<<name<<"\' not found\n";
                 }
             }
+
         }
         else if (strcmp(command, "ls") == 0)
         {
@@ -287,6 +405,11 @@ int main()
             }
             fclose(fp);
             system("cls");
+        }
+        else if (strcmp(command, "tree") == 0)
+        {
+            print_tree(cur);
+            cout<<endl;
         }
         else if (strcmp(command, "clear") == 0)
         {
